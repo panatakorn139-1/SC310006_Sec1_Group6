@@ -1,6 +1,7 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // เพิ่ม import นี้
 
 // Firebase configuration ที่ได้รับจาก Firebase Console
 const firebaseConfig = {
@@ -20,5 +21,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// ส่งออก auth และ googleProvider เพื่อให้ไฟล์อื่นสามารถใช้งานได้
-export { auth, googleProvider };
+// ตั้งค่า Firestore
+const db = getFirestore(app);
+
+// ส่งออก auth, googleProvider และ db เพื่อให้ไฟล์อื่นสามารถใช้งานได้
+export { auth, googleProvider, db };

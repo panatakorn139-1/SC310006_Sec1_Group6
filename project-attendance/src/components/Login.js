@@ -5,8 +5,8 @@ import {
     signInWithPopup,
     signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, googleProvider } from "./firebase";
-import "./Login.css";
+import { auth, googleProvider } from "../firebase";
+import "../styles/Login.css";
 
 const Login = () => {
     const [email, setEmail] = useState("");
