@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
 import "../styles/Dashboard.css";
 
 const Dashboard = () => {
@@ -27,10 +27,15 @@ const Dashboard = () => {
             where("owner", "==", currentUser.uid)
           );
           const querySnapshot = await getDocs(q);
-          const coursesData = [];
-          querySnapshot.forEach((docSnap) => {
-            coursesData.push({ cid: docSnap.id, ...docSnap.data() });
-          });
+          const coursesData = await Promise.all(
+            querySnapshot.docs.map(async (docSnap) => {
+              // ดึงข้อมูลจาก subcollection "info" (document "infoDoc")
+              const infoDocRef = doc(db, "classroom", docSnap.id, "info", "infoDoc");
+              const infoDocSnap = await getDoc(infoDocRef);
+              const info = infoDocSnap.exists() ? infoDocSnap.data() : {};
+              return { cid: docSnap.id, info };
+            })
+          );
           setCourses(coursesData);
         } catch (error) {
           console.error("Error fetching courses:", error);
@@ -41,7 +46,6 @@ const Dashboard = () => {
   }, []);
 
   const handleLogout = () => {
-    // ตัวอย่าง: ใช้ firebase.auth().signOut() (หรือ auth.signOut() ถ้าใช้ Firebase v9)
     auth.signOut();
     navigate("/");
   };

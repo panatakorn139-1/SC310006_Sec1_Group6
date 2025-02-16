@@ -15,27 +15,26 @@ const AddCourse = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // สร้าง document ใน collection classroom
+      // สร้าง document ห้องเรียนใน collection "classroom" พร้อมเก็บ owner เท่านั้น
       const classroomRef = await addDoc(collection(db, "classroom"), {
         owner: auth.currentUser.uid,
-        info: {
-          code: courseCode,
-          name: courseName,
-          room: classroomName,
-          photo: imageLink,
-        },
       });
       const cid = classroomRef.id;
 
-      // บันทึกข้อมูลใน /users/{uid}/classroom/{cid} พร้อม status = 1
-      await setDoc(
-        doc(db, "users", auth.currentUser.uid, "classroom", cid),
-        {
-          status: 1,
-        }
-      );
+      // สร้าง subcollection "info" พร้อม document "infoDoc" สำหรับข้อมูลวิชา
+      await setDoc(doc(db, "classroom", cid, "info", "infoDoc"), {
+        code: courseCode,
+        name: courseName,
+        room: classroomName,
+        photo: imageLink,
+      });
 
-      alert("เพิ่มวิชาสำเร็จ");
+      // บันทึกข้อมูลใน /users/{uid}/classroom/{cid} พร้อม status = 1
+      await setDoc(doc(db, "users", auth.currentUser.uid, "classroom", cid), {
+        status: 1,
+      });
+
+      alert("เพิ่มวิชาใหม่สำเร็จ");
       navigate("/dashboard");
     } catch (error) {
       console.error("Add course error:", error);
@@ -81,7 +80,6 @@ const AddCourse = () => {
             value={imageLink}
             onChange={(e) => setImageLink(e.target.value)}
           />
-          {/* หรือให้มีปุ่ม Upload / เลือกรูปภาพ */}
         </div>
         <button type="submit">บันทึกข้อมูล</button>
       </form>

@@ -1,18 +1,18 @@
 // src/ManageClassroom.js
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { 
-  doc, 
-  getDoc, 
-  collection, 
-  addDoc, 
-  setDoc, 
-  getDocs, 
-  query, 
-  orderBy 
+import {
+  doc,
+  getDoc,
+  collection,
+  addDoc,
+  setDoc,
+  getDocs,
+  query,
+  orderBy
 } from "firebase/firestore";
 import { db, auth } from "../firebase";
-import QRCode from "qrcodejs2"; // ตรวจสอบว่าติดตั้ง qrcodejs2 ด้วย npm install qrcodejs2
+import QRCode from "qrcodejs2";
 import "../styles/ManageClassroom.css";
 
 const ManageClassroom = () => {
@@ -25,11 +25,13 @@ const ManageClassroom = () => {
   useEffect(() => {
     const fetchClassroomData = async () => {
       try {
-        // ดึงข้อมูลรายละเอียดวิชา
-        const classroomRef = doc(db, "classroom", cid);
-        const classroomSnap = await getDoc(classroomRef);
-        if (classroomSnap.exists()) {
-          setCourseInfo(classroomSnap.data().info);
+        // ดึงข้อมูลรายละเอียดวิชา จาก subcollection "info" (document "infoDoc")
+        const infoDocRef = doc(db, "classroom", cid, "info", "infoDoc");
+        const infoSnap = await getDoc(infoDocRef);
+        if (infoSnap.exists()) {
+          setCourseInfo(infoSnap.data());
+        } else {
+          console.warn("ไม่พบข้อมูลใน infoDoc สำหรับ cid =", cid);
         }
 
         // ดึงรายชื่อนักเรียนที่ลงทะเบียน
@@ -75,14 +77,14 @@ const ManageClassroom = () => {
   // ฟังก์ชันเพิ่มการเช็คชื่อใหม่
   const handleAddCheckin = async () => {
     try {
-      // สร้างเอกสารใหม่ใน subcollection checkin พร้อมส่ง field owner
       const checkinRef = await addDoc(collection(db, "classroom", cid, "checkin"), {
-        code: "รหัสเช็คชื่อ", // สามารถปรับให้ generate รหัสหรือให้ผู้ใช้กรอกได้
+        code: "รหัสเช็คชื่อ",
         date: new Date(),
         status: 0,
         owner: auth.currentUser.uid,
       });
       const cno = checkinRef.id;
+
       // คัดลอกรายชื่อนักเรียนจาก /classroom/{cid}/students ไปยัง /classroom/{cid}/checkin/{cno}/scores โดยกำหนด status=0
       const studentsSnap = await getDocs(collection(db, "classroom", cid, "students"));
       studentsSnap.forEach(async (docSnap) => {

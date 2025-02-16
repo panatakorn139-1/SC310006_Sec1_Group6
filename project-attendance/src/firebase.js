@@ -1,9 +1,8 @@
-// src/firebase.js
+// firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore"; // เพิ่ม import นี้
+import { getFirestore } from "firebase/firestore";
 
-// Firebase configuration ที่ได้รับจาก Firebase Console
 const firebaseConfig = {
   apiKey: "AIzaSyB_kWn5ZtonrQxeqnS8Ta97Dubr2nQgvog",
   authDomain: "project-attendance-1e593.firebaseapp.com",
@@ -14,15 +13,10 @@ const firebaseConfig = {
   measurementId: "G-D759CH83G0"
 };
 
-// เริ่มต้น Firebase App
 const app = initializeApp(firebaseConfig);
 
-// ตั้งค่า Firebase Authentication และ Google Provider
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
-
-// ตั้งค่า Firestore
 const db = getFirestore(app);
 
-// ส่งออก auth, googleProvider และ db เพื่อให้ไฟล์อื่นสามารถใช้งานได้
 export { auth, googleProvider, db };
