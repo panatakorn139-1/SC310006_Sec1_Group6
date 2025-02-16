@@ -10,6 +10,9 @@ import ManageClassroom from "./components/ManageClassroom";
 import Checkin from "./components/Checkin";
 import QnA from "./components/QnA";
 
+// Main CSS
+import "./App.css";
+
 function App() {
   return (
     <Router>
