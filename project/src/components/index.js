@@ -5,4 +5,3 @@ export { default as Dashboard } from './Dashboard/Dashboard';
 export { default as Profile } from './Profile/Profile';
 export { default as AddClassroom } from './Classroom/AddClassroom';
 export { default as ManageClassroom } from './Classroom/ManageClassroom';
-export { default as CheckinClassroom } from './Classroom/CheckinClassroom';

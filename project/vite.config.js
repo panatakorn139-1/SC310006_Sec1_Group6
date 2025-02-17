@@ -8,5 +8,5 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-
+  base: '/SC310006_Sec1_Group6',
 })
