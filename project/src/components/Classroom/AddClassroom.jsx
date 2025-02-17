@@ -34,7 +34,7 @@ const AddClassroom = () => {
       });
 
       alert("เพิ่มวิชาใหม่สำเร็จ");
-      navigate("/dashboard");
+      navigate("/SC310006_Sec1_Group6/dashboard");
     } catch (error) {
       console.error("Add course error:", error);
       alert(error.message);

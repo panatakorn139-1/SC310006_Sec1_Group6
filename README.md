@@ -1,4 +1,4 @@
-# SC310006_Sec1_Group6
+# SC310006 Sec1 Group6
 # โปรเจค Vite React ด้วย Bun
 
 โปรเจคนี้เป็นโปรเจคที่สร้างด้วย Vite และ React โดยใช้ [Bun](https://bun.sh) เป็น runtime และ package manager สำหรับการติดตั้งและรันโปรเจค

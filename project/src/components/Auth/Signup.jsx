@@ -24,7 +24,7 @@ const SignUp = () => {
       .then((userCredential) => {
         console.log("Sign Up successful:", userCredential.user);
         // หลังจากสมัครสมาชิกสำเร็จ อาจเปลี่ยนหน้าไป Login หรือ Dashboard
-        navigate("/"); // ตัวอย่าง: เปลี่ยนไปหน้า Login
+        navigate("/SC310006_Sec1_Group6"); // ตัวอย่าง: เปลี่ยนไปหน้า Login
       })
       .catch((error) => {
         console.error("Sign Up error:", error);
@@ -62,7 +62,7 @@ const SignUp = () => {
         </button>
       </form>
       <p className="signup-hint">
-        มีบัญชีแล้ว? <span onClick={() => navigate("/")}>เข้าสู่ระบบ</span>
+        มีบัญชีแล้ว? <span onClick={() => navigate("/SC310006_Sec1_Group6")}>เข้าสู่ระบบ</span>
       </p>
     </div>
   );

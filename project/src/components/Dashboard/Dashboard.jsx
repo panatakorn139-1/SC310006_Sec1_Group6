@@ -52,7 +52,7 @@ const Dashboard = () => {
         fetchCourses();
       } else {
         // หากไม่มีผู้ใช้ให้กลับไปหน้า login หรือหน้าหลัก
-        navigate("/");
+        navigate("/SC310006_Sec1_Group6");
       }
     });
 
@@ -62,19 +62,19 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     auth.signOut();
-    navigate("/");
+    navigate("/SC310006_Sec1_Group6");
   };
 
   const handleAddCourse = () => {
-    navigate("/add-classroom");
+    navigate("/SC310006_Sec1_Group6/add-classroom");
   };
 
   const handleEditProfile = () => {
-    navigate("/profile");
+    navigate("/SC310006_Sec1_Group6/profile");
   };
 
   const handleManageClassroom = (cid) => {
-    navigate(`/classroom/${cid}`);
+    navigate(`/SC310006_Sec1_Group6/classroom/${cid}`);
   };
 
   return (

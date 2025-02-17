@@ -15,7 +15,7 @@ const Login = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((result) => {
                 console.log("Login successful:", result.user);
-                navigate("/dashboard");
+                navigate("/SC310006_Sec1_Group6/dashboard");
             })
             .catch((error) => {
                 console.error("Email/Password Login error:", error);
@@ -28,7 +28,7 @@ const Login = () => {
         signInWithPopup(auth, googleProvider)
             .then((result) => {
                 console.log("Google Login successful:", result.user);
-                navigate("/dashboard");
+                navigate("/SC310006_Sec1_Group6/dashboard");
             })
             .catch((error) => {
                 console.error("Google Login error:", error);
@@ -38,7 +38,7 @@ const Login = () => {
 
     // ปุ่มสมัครสมาชิก
     const handleGoToSignUp = () => {
-        navigate("/signup");
+        navigate("/SC310006_Sec1_Group6/signup");
     };
 
     return (
@@ -69,7 +69,7 @@ const Login = () => {
             </button>
             {/* ปุ่มไปหน้า Sign Up */}
             <div className="signup-link">
-                <p>ยังไม่มีบัญชี? <span onClick={() => navigate("/signup")}>สมัครสมาชิก</span></p>
+                <p>ยังไม่มีบัญชี? <span onClick={() => navigate("/SC310006_Sec1_Group6/signup")}>สมัครสมาชิก</span></p>
             </div>
         </div>
     );
