@@ -1,0 +1,38 @@
+.manage-classroom-container {
+  padding: 20px;
+}
+
+th, td {
+  padding: 5px;
+  text-align: left;
+  font-size: 12px;
+}
+
+thead tr:nth-child(odd) {
+  background-color: #eaeaea;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f6f6f6;
+}
+
+button {
+  font-size: 12px;
+}
+
+/* Media query for larger screens */
+@media screen and (min-width: 640px) {
+  th, td {
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 16px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  th, td {
+    padding: 10px;
+  }
+}
