@@ -21,6 +21,7 @@ body {
     background: linear-gradient(90deg, #007BFF, #00A1FF);
     color: #fff;
     padding: 20px 30px;
+    gap: 16px;
 }
 
 .dashboard-header .user-info {
@@ -122,7 +123,7 @@ body {
     background-color: #007BFF;
     color: #fff;
     padding: 10px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     cursor: pointer;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -138,9 +139,11 @@ body {
     .course-item {
         width: calc(50% - 20px);
     }
-}
 
-@media (max-width: 480px) {
+    .course-item button {
+        font-size: 0.9rem;
+    }
+
     .dashboard-header {
         flex-direction: column;
         align-items: flex-start;
@@ -150,7 +153,19 @@ body {
         margin-top: 15px;
     }
 
+    .header-actions button {
+        font-size: 16px;
+        margin-left: 8px;
+    }
+
     .course-item {
         width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-actions button {
+        font-size: 12px;
+        margin-left: 4px;
     }
 }

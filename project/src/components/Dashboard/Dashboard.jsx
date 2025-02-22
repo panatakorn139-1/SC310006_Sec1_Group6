@@ -84,8 +84,8 @@ const Dashboard = () => {
           <div className="user-info">
             <img src={user.photo} alt="User Photo" className="user-photo" />
             <div className="user-details">
-              <h2>{user.name}</h2>
-              <p>{user.email}</p>
+              <div className="font-bold">{user.name}</div>
+              <div className="">{user.email}</div>
             </div>
           </div>
         )}
@@ -102,7 +102,7 @@ const Dashboard = () => {
         </div>
       </header>
       <main className="dashboard-content">
-        <h2>วิชาที่สอน</h2>
+        <div className="text-lg md:text-xl mb-2 md:mb-3">วิชาที่สอน</div>
         {courses.length > 0 ? (
           <ul className="course-list">
             {courses.map((course) => (

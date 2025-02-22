@@ -9,6 +9,8 @@ const AddClassroom = () => {
   const [courseName, setCourseName] = useState("");
   const [classroomName, setClassroomName] = useState("");
   const [imageLink, setImageLink] = useState("");
+  const [imageClass, setImageClass] = useState({});
+  const [imageError, setImageError] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -41,9 +43,25 @@ const AddClassroom = () => {
     }
   };
 
+  const handleImageLinkChange = (e) => {
+    // checking if image link is valid
+    setImageLink(e.target.value);
+    if (e.target.value.match(/\.(jpeg|jpg|gif|png)$/i) != null || e.target.value === "") {
+      setImageClass({
+        border: "",
+      });
+      setImageError(false);
+    } else {
+      setImageClass({
+        border: "1px solid red",
+      });
+      setImageError(true);
+    }
+  }  
+
   return (
     <div className="add-course-container">
-      <h2>เพิ่มวิชาใหม่</h2>
+      <div className="text-lg font-medium md:text-xl">เพิ่มวิชาใหม่</div>
       <form onSubmit={handleSubmit} className="add-course-form">
         <div>
           <label style={{ display: "block", textAlign: "left" }}>รหัสวิชา:</label> 
@@ -78,11 +96,13 @@ const AddClassroom = () => {
         <div>
           <label style={{ display: "block", textAlign: "left" }}>Link รูปภาพ:</label> 
           <input
+            style={imageClass}
             type="text"
             value={imageLink}
-            onChange={(e) => setImageLink(e.target.value)}
-            placeholder="Link รูปภาพ"
+            onChange={handleImageLinkChange}
+            placeholder="เช่น https://example.com/image.jpg"
           />
+          <p className="text-red-400 mb-4">{imageError && "Link รูปภาพไม่ถูกต้อง"}</p>
         </div>
         <button type="submit">บันทึกข้อมูล</button>
       </form>

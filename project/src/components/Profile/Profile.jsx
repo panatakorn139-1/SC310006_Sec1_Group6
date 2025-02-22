@@ -44,7 +44,7 @@ const Profile = () => {
 
   return (
     <div className="edit-profile-container">
-      <h2>แก้ไขข้อมูลส่วนตัว</h2>
+      <div className="text-lg font-medium md:text-xl mb-2 md:mb-4">แก้ไขข้อมูลส่วนตัว</div >
       <form onSubmit={handleSubmit} className="edit-profile-form">
         <div>
           <label>ชื่อ:</label>

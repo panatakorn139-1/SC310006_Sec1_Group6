@@ -119,90 +119,99 @@ const ManageClassroom = () => {
   };
 
   return (
-    <div className="manage-classroom-container">
+    <div className="manage-classroom-container max-w-5xl mx-auto">
       {courseInfo && (
-        <div className="course-details">
-          <h2>{courseInfo.name}</h2>
-          <p>รหัสวิชา: {courseInfo.code}</p>
-          <img src={courseInfo.photo} alt={courseInfo.name} className="course-bg" />
-          {/* แสดง QR code โดยใช้ react-qr-code */}
-          <div className="qrcode-container">
-            <ReactQrCode value={cid} size={128} />
+        <div className="course-details shadow-xl p-4 md:p-8 rounded-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 md:gap-6">
+            <div>
+              <div>
+                <div className="text-xl md:text-3xl font-bold mb-1">{courseInfo.name}</div>
+                <div className="text-md md:text-xl md:mb-4">รหัสวิชา: {courseInfo.code}</div>
+              </div>
+              {/* <div className="qrcode-container flex">
+                  <div className="items-end">
+                    <ReactQrCode value={cid} className="w-16 h-16" />
+                  </div>
+                </div> */}
+            </div>
+            <div className="overflow-hidden rounded-2xl mt-4 md:mt-0 max-w-md">
+              <img src={courseInfo.photo} alt={courseInfo.name} className="course-bg w-full min-w-sm" />
+            </div>
           </div>
         </div>
       )}
-
-      <h3>รายชื่อนักเรียนที่ลงทะเบียน</h3>
-      <table className="students-table">
-        <thead>
-          <tr>
-            <th>ลำดับ</th>
-            <th>รหัส</th>
-            <th>ชื่อ</th>
-            <th>รูปภาพ</th>
-            <th>สถานะ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {students.length > 0 ? (
-            students.map((s, index) => (
-              <tr key={s.id}>
-                <td>{index + 1}</td>
-                <td>{s.stdid || s.id}</td>
-                <td>{s.name}</td>
-                <td>
-                  {s.photo ? (
-                    <img src={s.photo} alt={s.name} width="50" />
-                  ) : (
-                    "ไม่มี"
-                  )}
-                </td>
-                <td>{s.status}</td>
-              </tr>
-            ))
-          ) : (
+      <div className="rounded-2xl p-4 shadow-xl md:p-8 mt-4 w-full min-w-xs">
+        <div className="text-md md:text-xl mt-6">รายชื่อนักเรียนที่ลงทะเบียน</div>
+        <table className="students-table mt-2 w-full">
+          <thead>
             <tr>
-              <td colSpan="5">ยังไม่มีนักเรียนลงทะเบียน</td>
+              <th>ลำดับ</th>
+              <th>รหัส</th>
+              <th>ชื่อ</th>
+              <th>รูปภาพ</th>
+              <th>สถานะ</th>
             </tr>
-          )}
-        </tbody>
-      </table>
-
-      <button onClick={handleAddCheckin} className="button">
-        เพิ่มการเช็คชื่อ
-      </button>
-
-      <h3>ประวัติการเช็คชื่อ</h3>
-      <table className="checkin-history-table">
-        <thead>
-          <tr>
-            <th>ลำดับ</th>
-            <th>วัน-เวลา</th>
-            <th>จำนวนคนเข้าเรียน</th>
-            <th>สถานะ</th>
-            <th>จัดการ</th>
-          </tr>
-        </thead>
-        <tbody>
-          {checkinHistory.length > 0 ? (
-            checkinHistory.map((checkin, index) => (
-              <tr key={checkin.cno}>
-                <td>{index + 1}</td>
-                <td>{new Date(checkin.date.seconds * 1000).toLocaleString()}</td>
-                <td>{checkin.count ? checkin.count : "-"}</td>
-                <td>{checkin.status === 0 ? "กำลังเรียน" : "เสร็จสิ้น"}</td>
-                <td>
-                  <button className="button">เช็คเชื่อ</button>
-                </td>
+          </thead>
+          <tbody>
+            {students.length > 0 ? (
+              students.map((s, index) => (
+                <tr key={s.id}>
+                  <td>{index + 1}</td>
+                  <td>{s.stdid || s.id}</td>
+                  <td>{s.name}</td>
+                  <td>
+                    {s.photo ? (
+                      <img src={s.photo} alt={s.name} width="50" />
+                    ) : (
+                      "ไม่มี"
+                    )}
+                  </td>
+                  <td>{s.status}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">ยังไม่มีนักเรียนลงทะเบียน</td>
               </tr>
-            ))
-          ) : (
+            )}
+          </tbody>
+        </table>
+        <button onClick={handleAddCheckin} className="mt-4 block ml-auto mr-2 text-xs md:text-lg">
+          เพิ่มการเช็คชื่อ
+        </button>
+
+        <div className="text-md md:text-xl mt-6">ประวัติการเช็คชื่อ</div>
+        <table className="checkin-history-table mt-2 w-full min-w-32">
+          <thead>
             <tr>
-              <td colSpan="5">ยังไม่มีประวัติการเช็คชื่อ</td>
+              <th>ลำดับ</th>
+              <th>วัน-เวลา</th>
+              <th>จำนวนคนเข้าเรียน</th>
+              <th>สถานะ</th>
+              <th>จัดการ</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {checkinHistory.length > 0 ? (
+              checkinHistory.map((checkin, index) => (
+                <tr key={checkin.cno}>
+                  <td>{index + 1}</td>
+                  <td>{new Date(checkin.date.seconds * 1000).toLocaleString()}</td>
+                  <td>{checkin.count ? checkin.count : "-"}</td>
+                  <td>{checkin.status === 0 ? "กำลังเรียน" : "เสร็จสิ้น"}</td>
+                  <td>
+                    <button className="button w-full text-xs">เช็คเชื่อ</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="5">ยังไม่มีประวัติการเช็คชื่อ</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
