@@ -13,6 +13,7 @@ import {
   orderBy,
   serverTimestamp
 } from "firebase/firestore";
+import { QRCodeSVG } from "qrcode.react"; 
 import "./ManageClassroom.css";
 
 const ManageClassroom = () => {
@@ -23,6 +24,7 @@ const ManageClassroom = () => {
   const [studentsCheckedIn, setStudentsCheckedIn] = useState([]);
   const [selectedCheckin, setSelectedCheckin] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
+  const [selectedQrCode, setSelectedQrCode] = useState(null); // ✅ เก็บข้อมูลของ QR Code ที่เลือก
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -72,18 +74,19 @@ const ManageClassroom = () => {
       const checkinRef = collection(db, `classroom/${cid}/checkin`);
       const checkinSnap = await getDocs(checkinRef);
       const cno = (checkinSnap.size + 1).toString();
+      const checkinCode = Math.random().toString(36).substr(2, 6).toUpperCase();
 
       const checkinDocRef = doc(db, `classroom/${cid}/checkin/${cno}`);
       await setDoc(checkinDocRef, {
-        code: Math.random().toString(36).substr(2, 6).toUpperCase(),
+        code: checkinCode,
         date: serverTimestamp(),
         status: 0,
         owner: currentUser.uid,
         count: 0
       });
 
-      alert("เพิ่มการเช็คชื่อสำเร็จ!");
       fetchClassroomData();
+      alert("เพิ่มการเช็คชื่อสำเร็จ!");
     } catch (error) {
       console.error("Add checkin error:", error);
       alert(error.message);
@@ -94,28 +97,21 @@ const ManageClassroom = () => {
     try {
       const checkinDocRef = doc(db, `classroom/${cid}/checkin/${cno}`);
       await updateDoc(checkinDocRef, { status: newStatus });
+
       fetchClassroomData();
+      alert("เปลี่ยนสถานะสำเร็จ!");
     } catch (error) {
       console.error("Error updating check-in status:", error);
-      alert(error.message);
+      alert("เปลี่ยนสถานะไม่สำเร็จ");
     }
   };
 
-  const fetchCheckedInStudents = async (cno) => {
-    try {
-      const studentsRef = collection(db, `classroom/${cid}/checkin/${cno}/students`);
-      const studentsSnap = await getDocs(studentsRef);
-      
-      const students = studentsSnap.docs.map((docSnap) => ({
-        id: docSnap.id,
-        ...docSnap.data()
-      }));
-      
-      setStudentsCheckedIn(students);
-      setSelectedCheckin(cno);
-    } catch (error) {
-      console.error("Error fetching checked-in students:", error);
-    }
+  // ✅ ฟังก์ชันเลือก QR Code
+  const handleShowQrCode = (checkin) => {
+    setSelectedQrCode({
+      url: `https://yourapp.com/classroom/${cid}/checkin/${checkin.cno}?code=${checkin.code}`,
+      code: checkin.code,
+    });
   };
 
   return (
@@ -151,6 +147,7 @@ const ManageClassroom = () => {
             <th>สถานะ</th>
             <th>ดูรายชื่อ</th>
             <th>เปลี่ยนสถานะ</th>
+            <th>ดู QR Code</th>
           </tr>
         </thead>
         <tbody>
@@ -163,7 +160,7 @@ const ManageClassroom = () => {
                 <td>{checkin.count || 0}</td>
                 <td>{checkin.status === 0 ? "ยังไม่เริ่ม" : checkin.status === 1 ? "กำลังเช็คชื่อ" : "เสร็จสิ้น"}</td>
                 <td>
-                  <button onClick={() => fetchCheckedInStudents(checkin.cno)} className="btn-primary">
+                  <button onClick={() => setSelectedCheckin(checkin.cno)} className="btn-primary">
                     ดูรายชื่อ
                   </button>
                 </td>
@@ -172,30 +169,28 @@ const ManageClassroom = () => {
                     เปลี่ยนสถานะ
                   </button>
                 </td>
+                <td>
+                  <button onClick={() => handleShowQrCode(checkin)} className="btn-primary">
+                    ดู QR Code
+                  </button>
+                </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7">ยังไม่มีประวัติการเช็คชื่อ</td>
+              <td colSpan="8">ยังไม่มีประวัติการเช็คชื่อ</td>
             </tr>
           )}
         </tbody>
       </table>
 
-      {selectedCheckin && (
-        <div className="mt-6">
-          <h3>รายชื่อผู้เช็คชื่อ (รอบ {selectedCheckin})</h3>
-          <ul>
-            {studentsCheckedIn.length > 0 ? (
-              studentsCheckedIn.map((student) => (
-                <li key={student.id}>{student.name} ({student.stdid})</li>
-              ))
-            ) : (
-              <p>ยังไม่มีนักเรียนเช็คชื่อ</p>
-            )}
-          </ul>
-          <button onClick={() => setSelectedCheckin(null)} className="btn-primary">
-            ปิด
+      {selectedQrCode && (
+        <div className="mt-4 flex flex-col items-center">
+          <h3>QR Code สำหรับการเช็คชื่อ</h3>
+          <QRCodeSVG value={selectedQrCode.url} size={200} />
+          <p className="mt-2">รหัส: {selectedQrCode.code}</p>
+          <button onClick={() => setSelectedQrCode(null)} className="mt-2 btn-primary">
+            ปิด QR Code
           </button>
         </div>
       )}
