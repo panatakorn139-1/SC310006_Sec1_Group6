@@ -1,0 +1,41 @@
+.answer-panel {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .answer-panel h3 {
+    margin-bottom: 15px;
+  }
+  
+  .question-section {
+    margin-bottom: 20px;
+  }
+  
+  .question-section h4 {
+    margin-bottom: 10px;
+  }
+  
+  .answer-panel table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+  
+  .answer-panel th,
+  .answer-panel td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .btn-secondary {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }

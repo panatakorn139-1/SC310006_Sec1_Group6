@@ -11,11 +11,14 @@ import {
   updateDoc,
   query,
   orderBy,
-  serverTimestamp
+  serverTimestamp,
 } from "firebase/firestore";
 import Swal from "sweetalert2";
 import { QRCodeCanvas } from "qrcode.react";
 import "./ManageClassroom.css";
+
+import QAPanel from "./QAPanel";
+import AnswerPanel from "./AnswerPanel";
 
 const ManageClassroom = () => {
   const { cid } = useParams();
@@ -27,6 +30,8 @@ const ManageClassroom = () => {
   const [studentsCheckedIn, setStudentsCheckedIn] = useState([]);
   const [selectedCheckin, setSelectedCheckin] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showQAPanel, setShowQAPanel] = useState(false);
+  const [showAnswerPanel, setShowAnswerPanel] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -60,10 +65,20 @@ const ManageClassroom = () => {
         orderBy("date", "desc")
       );
       const checkinSnap = await getDocs(checkinQuery);
-      setCheckinHistory(checkinSnap.docs.map(docSnap => ({
-        cno: docSnap.id,
-        ...docSnap.data()
-      })));
+      const checkinHistoryData = await Promise.all(
+        checkinSnap.docs.map(async (docSnap) => {
+          const cno = docSnap.id;
+          const checkinData = { cno, ...docSnap.data() };
+
+          // Fetch the number of students in the students subcollection for this check-in
+          const studentsSubcollectionRef = collection(db, `classroom/${cid}/checkin/${cno}/students`);
+          const studentsSubcollectionSnap = await getDocs(studentsSubcollectionRef);
+          const studentCount = studentsSubcollectionSnap.size; // Get the number of documents in the subcollection
+
+          return { ...checkinData, count: studentCount };
+        })
+      );
+      setCheckinHistory(checkinHistoryData);
     } catch (error) {
       Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถโหลดข้อมูลได้", "error");
     } finally {
@@ -117,7 +132,7 @@ const ManageClassroom = () => {
         code: checkinCode,
         date: serverTimestamp(),
         status: 1,
-        count: 0
+        count: 0 // Initially set count to 0, it will be updated when students check in
       });
 
       Swal.fire("สำเร็จ", "สร้างการเช็คชื่อใหม่เรียบร้อยแล้ว", "success");
@@ -155,6 +170,11 @@ const ManageClassroom = () => {
     }
   };
 
+  const openAnswerPanel = (cno) => {
+    setSelectedAnswerCheckin(cno);
+    setShowAnswerPanel(true);
+  };
+
   return (
     <div className="manage-classroom-container max-w-5xl mx-auto">
       {loading ? (
@@ -184,8 +204,11 @@ const ManageClassroom = () => {
             </div>
           )}
 
-          <button onClick={createNewCheckin} className="btn-primary mb-5 mt-10">
+          <button onClick={createNewCheckin} className="btn-primary mb-5 mt-10 mr-4">
             + เพิ่มการเช็คชื่อใหม่
+          </button>
+          <button onClick={() => setShowQAPanel(true)} className="btn-primary">
+            ถาม-ตอบ
           </button>
 
           <div className="text-md md:text-xl mt-6">รายชื่อนักเรียนที่ลงทะเบียน</div>
@@ -241,7 +264,7 @@ const ManageClassroom = () => {
                   <td>{index + 1}</td>
                   <td>{new Date(checkin.date.toDate()).toLocaleString()}</td>
                   <td>{checkin.code}</td>
-                  <td>{checkin.count || 0}</td>
+                  <td>{checkin.count || 0}</td> {/* This will now reflect the actual student count from the subcollection */}
                   <td>{checkin.status === 1 ? "กำลังเช็คชื่อ" : "ปิดเช็คชื่อ"}</td>
                   <td>
                     <button onClick={() => toggleCheckinStatus(checkin.cno, checkin.status)}>
@@ -291,6 +314,21 @@ const ManageClassroom = () => {
                 <p>ยังไม่มีนักเรียนเช็คชื่อสำหรับรหัสนี้</p>
               )}
             </div>
+          )}
+          {showQAPanel && (
+            <QAPanel
+              cid={cid}
+              selectedCheckin={selectedCheckin}
+              onClose={() => setShowQAPanel(false)}
+            />
+          )}
+
+          {showAnswerPanel && (
+            <AnswerPanel
+              cid={cid}
+              cno={selectedAnswerCheckin}
+              onClose={() => setShowAnswerPanel(false)}
+            />
           )}
         </>
       )}
