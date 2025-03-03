@@ -103,8 +103,16 @@ const ManageClassroom = () => {
 
   const createNewCheckin = async () => {
     try {
+      const checkinRef = collection(db, "classroom", cid, "checkin");
+      const checkinSnap = await getDocs(checkinRef);
+      const newCheckinNumber = checkinSnap.docs.length + 1; // กำหนดลำดับถัดไป
+
+      // สร้างรหัสเช็คชื่อแบบสุ่ม
       const checkinCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-      const newCheckinRef = doc(collection(db, "classroom", cid, "checkin"));
+
+      // กำหนด ID เป็นตัวเลขลำดับแทนค่าอัตโนมัติ
+      const newCheckinRef = doc(db, "classroom", cid, "checkin", newCheckinNumber.toString());
+
       await setDoc(newCheckinRef, {
         code: checkinCode,
         date: serverTimestamp(),
