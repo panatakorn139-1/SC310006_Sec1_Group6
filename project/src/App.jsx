@@ -11,7 +11,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/SC310006_Sec1_Group6" element={<components.Login />} />
+        <Route path="/SC310006_Sec1_Group6/" element={<components.Login />} />
         <Route path='/SC310006_Sec1_Group6/signup' element={<components.Signup />} />
         <Route path='/SC310006_Sec1_Group6/dashboard' element={<components.Dashboard />} />
         <Route path='/SC310006_Sec1_Group6/profile' element={<components.Profile />} />
