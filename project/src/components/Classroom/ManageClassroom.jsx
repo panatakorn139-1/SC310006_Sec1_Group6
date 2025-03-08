@@ -29,6 +29,8 @@ const ManageClassroom = () => {
   const [checkinHistory, setCheckinHistory] = useState([]);
   const [studentsCheckedIn, setStudentsCheckedIn] = useState([]);
   const [selectedCheckin, setSelectedCheckin] = useState(null);
+  // เพิ่ม state สำหรับ selectedAnswerCheckin
+  const [selectedAnswerCheckin, setSelectedAnswerCheckin] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showQAPanel, setShowQAPanel] = useState(false);
   const [showAnswerPanel, setShowAnswerPanel] = useState(false);
@@ -170,6 +172,7 @@ const ManageClassroom = () => {
     }
   };
 
+  // ปรับปรุงฟังก์ชัน openAnswerPanel ให้ใช้งาน state ที่ประกาศใหม่
   const openAnswerPanel = (cno) => {
     setSelectedAnswerCheckin(cno);
     setShowAnswerPanel(true);
@@ -256,6 +259,7 @@ const ManageClassroom = () => {
                 <th>สถานะ</th>
                 <th>เปลี่ยนสถานะ</th>
                 <th>ดูรายชื่อ</th>
+                <th>ดูคำตอบ</th>
               </tr>
             </thead>
             <tbody>
@@ -264,7 +268,7 @@ const ManageClassroom = () => {
                   <td>{index + 1}</td>
                   <td>{new Date(checkin.date.toDate()).toLocaleString()}</td>
                   <td>{checkin.code}</td>
-                  <td>{checkin.count || 0}</td> {/* This will now reflect the actual student count from the subcollection */}
+                  <td>{checkin.count || 0}</td>
                   <td>{checkin.status === 1 ? "กำลังเช็คชื่อ" : "ปิดเช็คชื่อ"}</td>
                   <td>
                     <button onClick={() => toggleCheckinStatus(checkin.cno, checkin.status)}>
@@ -274,6 +278,11 @@ const ManageClassroom = () => {
                   <td>
                     <button onClick={() => fetchCheckedInStudents(checkin.cno)}>
                       ดูรายชื่อ
+                    </button>
+                  </td>
+                  <td>
+                    <button onClick={() => openAnswerPanel(checkin.cno)}>
+                      ดูคำตอบ
                     </button>
                   </td>
                 </tr>
@@ -302,8 +311,8 @@ const ManageClassroom = () => {
                         <td>{student.name}</td>
                         <td>{student.stdid}</td>
                         <td>
-                          {student.date // เปลี่ยนจาก timestamp เป็น date
-                            ? new Date(student.date).toLocaleString() // แปลง string ISO 8601 เป็นวันที่
+                          {student.date
+                            ? new Date(student.date).toLocaleString()
                             : "ไม่พบข้อมูลเวลา"}
                         </td>
                       </tr>
