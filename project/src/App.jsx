@@ -21,8 +21,8 @@ function App() {
         <Route path='/SC310006_Sec1_Group6/profile' element={<components.Profile />} />
         <Route path='/SC310006_Sec1_Group6/classroom/:cid' element={<components.ManageClassroom />} />
         <Route path='/SC310006_Sec1_Group6/add-classroom' element={<components.AddClassroom />} />
-        <Route path="/classroom/:cid/checkin" element={<Checkin />} /> 
-        <Route path="/classroom/:cid/scores" element={<ScoreManagement />} />
+        <Route path="/SC310006_Sec1_Group6/classroom/:cid/checkin" element={<Checkin />} /> 
+        <Route path="/SC310006_Sec1_Group6/classroom/:cid/scores" element={<ScoreManagement />} />
       </Routes>
     </Router>
   )
