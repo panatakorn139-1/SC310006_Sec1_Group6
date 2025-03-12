@@ -1,39 +1,75 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { Stack } from "expo-router";
+import { useEffect, useState } from "react";
+import { useFonts } from "expo-font";
+import { View, Image } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+// Import Tailwind CSS
+import "../global.css";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  const [isAppReady, setIsAppReady] = useState(false);
+
+  const [fontsLoaded] = useFonts({
+    // Poppins
+    "Poppins-Regular": require("../assets/fonts/Poppins/Poppins-Regular.ttf"),
+    "Poppins-Medium": require("../assets/fonts/Poppins/Poppins-Medium.ttf"),
+    "Poppins-SemiBold": require("../assets/fonts/Poppins/Poppins-SemiBold.ttf"),
+    "Poppins-Bold": require("../assets/fonts/Poppins/Poppins-Bold.ttf"),
+
+    // Prompt
+    "Prompt-Regular": require("../assets/fonts/Prompt/Prompt-Regular.ttf"),
+    "Prompt-Medium": require("../assets/fonts/Prompt/Prompt-Medium.ttf"),
+    "Prompt-SemiBold": require("../assets/fonts/Prompt/Prompt-SemiBold.ttf"),
+    "Prompt-Bold": require("../assets/fonts/Prompt/Prompt-Bold.ttf"),
   });
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
+    async function prepare() {
+      try {
+        if (!fontsLoaded) return;
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsAppReady(true);
+      }
     }
-  }, [loaded]);
 
-  if (!loaded) {
-    return null;
+    prepare();
+  }, [fontsLoaded]);
+
+  if (!isAppReady || !fontsLoaded) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "#fff",
+        }}
+      >
+        <Image
+          style={{
+            width: 200,
+            height: 200,
+          }}
+          source={require("../assets/images/icon.png")}
+        />
+      </View>
+    );
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="classroom" />  {/* ✅ เปลี่ยนจาก classroom/[id] เป็น classroom */}
+        <Stack.Screen name="classroom/checkin" />  {/* ✅ เปลี่ยนจาก classroom/[id]/checkin เป็น checkin */}
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
